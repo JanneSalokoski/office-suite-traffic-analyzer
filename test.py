@@ -2,14 +2,22 @@ from selenium import webdriver
 
 import time
 
-driver = webdriver.Chrome()
-driver.get("https://www.google.com")
+import typer
 
-while True:
-    inp = input()
-    if inp == "q":
-        break
 
-    time.sleep(1)
+def main(url: str):
+    driver = webdriver.Chrome()
 
-driver.quit()
+    try:
+        driver.get(url)
+    except Exception as e:
+        print(f"Could not load '{url}'")
+        print(e)
+        driver.quit()
+
+    time.sleep(5)
+    driver.quit()
+
+
+if __name__ == "__main__":
+    typer.run(main)
