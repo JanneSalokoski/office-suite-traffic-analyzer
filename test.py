@@ -1,5 +1,11 @@
+"""test.py
+
+Runs an automated test of writing given text into an online document,
+either a Google Docs or a Microsoft Word -document.
+"""
+
 from enum import Enum
-from typing import Annotated, Literal, Optional, override
+from typing import Annotated, override
 from selenium import webdriver
 
 import time
@@ -14,15 +20,22 @@ import typer
 
 
 def read_file(file: str):
+    """Read a file from disk and return it's contents"""
     with open(file, "r") as f:
         return f.read()
 
 
 class TestRunner:
+    """Generic class for running a test.
+    Should be inherited and overloaded by the actual tests.
+    """
+
     def __init__(self):
         self.driver: WebDriver = webdriver.Chrome()
 
     def open(self, url: str):
+        """Try to open the url given"""
+
         try:
             self.driver.get(url)
         except Exception as e:
@@ -31,9 +44,15 @@ class TestRunner:
             self.driver.quit()
 
     def wait_until_ready(self):
+        """Wait until the document is ready to be written into.
+        This especially should be overloaded
+        """
+
         pass
 
     def write_to_file(self, text: str, target_wpm: int = 80):
+        """Write given text to the document while targeting a certain wpm"""
+
         webdriver.ActionChains(self.driver).key_down(webdriver.Keys.CONTROL).send_keys(
             "a"
         ).key_up(webdriver.Keys.CONTROL).send_keys(webdriver.Keys.BACKSPACE).perform()
@@ -66,6 +85,7 @@ class TestRunner:
         print(f"wpm: {(words / (end - start)) * 60}")
 
     def run(self, url: str, text: str):
+        """Run the actual test"""
         self.open(url)
         self.wait_until_ready()
         self.write_to_file(text)
@@ -73,8 +93,11 @@ class TestRunner:
 
 
 class WordTestRunner(TestRunner):
+    """Implementation of TestRunner for Word-documents"""
+
     @override
     def wait_until_ready(self):
+        """Wait for specific items to appear"""
         iframe = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
         )
@@ -87,6 +110,10 @@ class WordTestRunner(TestRunner):
 
 
 class ChromeTestRunner(TestRunner):
+    """A dummy implementation for Docs-documents
+    Nothing special is needed, since loading is fast enough on docs.
+    """
+
     pass
 
 
