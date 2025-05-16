@@ -4,6 +4,9 @@ import time
 import random
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import typer
 
 
@@ -36,6 +39,17 @@ def main(url: str, file: str):
 
         words = len(text.split(" "))
         print(f"Should take {(words / target_wpm) * 60} seconds")
+
+        iframe = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
+        )
+
+        driver.switch_to.frame(iframe)
+        print("Switched to iframe")
+
+        _ = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".PageContent"))
+        )
 
         start = time.perf_counter()
 
