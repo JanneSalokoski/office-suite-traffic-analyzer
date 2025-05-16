@@ -11,6 +11,7 @@ from selenium import webdriver
 import time
 import random
 
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -31,7 +32,13 @@ class TestRunner:
     """
 
     def __init__(self):
-        self.driver: WebDriver = webdriver.Chrome()
+        chrome_opts = Options()
+        chrome_opts.add_argument("--headless=new")
+        chrome_opts.add_argument("--disable-gpu")
+        chrome_opts.add_argument("--no-sandbox")
+        chrome_opts.add_argument("--window-size=1920,1080")
+
+        self.driver: WebDriver = webdriver.Chrome(options=chrome_opts)
 
     def open(self, url: str):
         """Try to open the url given"""
