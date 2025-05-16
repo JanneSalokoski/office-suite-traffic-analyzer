@@ -108,6 +108,9 @@ class WordTestRunner(TestRunner):
     @override
     def wait_until_ready(self):
         """Wait for specific items to appear"""
+
+        print(self.driver.title)
+
         # iframe = WebDriverWait(self.driver, 10).until(
         #     EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
         # )
@@ -117,7 +120,9 @@ class WordTestRunner(TestRunner):
         # _ = WebDriverWait(self.driver, 10).until(
         #     EC.presence_of_element_located((By.CSS_SELECTOR, ".Page"))
         # )
+
         time.sleep(2)
+        print(self.driver.title)
 
 
 class ChromeTestRunner(TestRunner):
