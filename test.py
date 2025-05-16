@@ -4,6 +4,8 @@ Runs an automated test of writing given text into an online document,
 either a Google Docs or a Microsoft Word -document.
 """
 
+import os, tempfile, shutil
+
 from enum import Enum
 from typing import Annotated, override
 from selenium import webdriver
@@ -37,6 +39,7 @@ class TestRunner:
         chrome_opts.add_argument("--disable-gpu")
         chrome_opts.add_argument("--no-sandbox")
         chrome_opts.add_argument("--window-size=1920,1080")
+        chrome_opts.add_argument("--disable-dev-shm-usage")
 
         self.driver: WebDriver = webdriver.Chrome(options=chrome_opts)
 
@@ -47,7 +50,7 @@ class TestRunner:
             self.driver.get(url)
         except Exception as e:
             print(f"Could not load url '{url}'")
-            print(e)
+            # print(e)
             self.driver.quit()
 
     def wait_until_ready(self):
@@ -96,7 +99,7 @@ class TestRunner:
         self.open(url)
         self.wait_until_ready()
         self.write_to_file(text)
-        self.driver.close()
+        self.driver.quit()
 
 
 class WordTestRunner(TestRunner):
@@ -105,15 +108,16 @@ class WordTestRunner(TestRunner):
     @override
     def wait_until_ready(self):
         """Wait for specific items to appear"""
-        iframe = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
-        )
-
-        self.driver.switch_to.frame(iframe)
-
-        _ = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".Page"))
-        )
+        # iframe = WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
+        # )
+        #
+        # self.driver.switch_to.frame(iframe)
+        #
+        # _ = WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.CSS_SELECTOR, ".Page"))
+        # )
+        time.sleep(2)
 
 
 class ChromeTestRunner(TestRunner):

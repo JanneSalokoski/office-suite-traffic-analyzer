@@ -1,0 +1,17 @@
+services:
+  selenium-recorder:
+    build: .
+    # network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    env_file:
+      - .env
+    environment:
+      - HOME=/tmp
+      - XDG_CONFIG_HOME=/tmp/.config
+      - XDG_CACHE_HOME=/tmp/.cache
+      - XDG_DATA_HOME=/tmp/.local/share
+    volumes:
+      - ./captures:/captures
+      - ./:/app
