@@ -12,7 +12,7 @@ TSHARK_PID=$!
 
 sleep 2
 
-python test.py $DOCS_URL input/lorem_supershort.txt -m docs
+python test.py $DOCS_URL $INPUT_FILE -m docs
 
 kill $TSHARK_PID
 wait $TSHARK_PID 2>/dev/null || true
@@ -25,7 +25,7 @@ tshark -i any -w "$PCAP_OUT" &
 TSHARK_PID=$!
 
 sleep 2
-python test.py $WORD_URL input/lorem_supershort.txt -m word
+python test.py $WORD_URL $INPUT_FILE -m word
 
 kill $TSHARK_PID
 wait $TSHARK_PID 2>/dev/null || true
